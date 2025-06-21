@@ -1,0 +1,4 @@
+Post to NFT
+User login at wallet or token
+Doğrulama	Merkeziyetsiz profil sistemine geçiş (DID)
+
