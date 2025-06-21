@@ -6,8 +6,10 @@ import motor.motor_asyncio
 import os
 from dotenv import load_dotenv
 from pydantic import BaseModel
+import httpx 
+from model import get_model
 
-
+# Load env variables
 load_dotenv()
 
 # Logger config
@@ -49,6 +51,25 @@ async def test_db_connection():
     except Exception as e:
         logger.error(f"DB error: {e}")
         raise HTTPException(status_code=500, detail="DB connection failed")
+
+# Request model
+class PromptRequest(BaseModel):
+    prompt: str
+
+# POST endpoint
+@app.post("/prompt-analyze")
+async def prompt_analyze(request: PromptRequest):
+    """
+    Receives a prompt from the frontend (in JSON body),
+    sends it to the external LLM API, and returns the LLM's response.
+    """
+    model = get_model()
+    response = model.invoke(request.prompt)
+
+    return {
+        "status": "success",
+        "llm_response": response.content
+    }
 
 # Request modeli
 class AnalyzeRequest(BaseModel):
