@@ -6,9 +6,8 @@ import motor.motor_asyncio
 import os
 from dotenv import load_dotenv
 from pydantic import BaseModel
-from llm_client import call_llm
 
-# Load env variables
+
 load_dotenv()
 
 # Logger config
