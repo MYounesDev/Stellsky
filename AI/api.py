@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 # MongoDB setup
 MONGO_URI = os.getenv("MONGO_URI")
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)
-db = client["hach-pera-db"]  # Mongo'daki veritabanı adı
+db = client["hach-pera-db"]  
 
 # FastAPI setup
 app = FastAPI(
@@ -30,7 +30,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Prod ortamında güvenli liste kullan
+    allow_origins=["*"],  #-
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -71,12 +71,12 @@ async def prompt_analyze(request: PromptRequest):
         "llm_response": response.content
     }
 
-# Request modeli
+# Request model
 class AnalyzeRequest(BaseModel):
     user_id: str
     prompt: str
 
-# Kullanıcının profilini analiz eden AI endpointi
+# Analyze profile
 @app.post("/analyze-profile")
 async def analyze_profile(request: AnalyzeRequest):
     try:
@@ -84,7 +84,6 @@ async def analyze_profile(request: AnalyzeRequest):
         if not user_data:
             raise HTTPException(status_code=404, detail="User not found")
 
-        # Kullanıcı bilgilerini modele yollamak için hazırlıyoruz
         full_prompt = f"Prompt:\n{request.prompt}\n\nUser Info:\n{user_data}"
         #result = await call_llm(full_prompt)
 
