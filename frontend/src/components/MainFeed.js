@@ -11,7 +11,8 @@ import {
   Plus,
   Play,
 } from "lucide-react";
-import { useStellar } from "../hooks/useStellar";
+import { useStellar } from "../contexts/StellarContext";
+import PostModal from "./PostModal";
 
 // Instagram benzeri Stories
 const stories = [
@@ -63,7 +64,7 @@ const posts = [
     color: "from-primary to-accent",
     time: "2s",
     content:
-      "Stellar blockchain ekosistemi her gün büyüyor! Yeni DeFi protokolleri ve NFT projeleri gelmeye devam ediyor. 🚀✨",
+      "Stellar blockchain ecosystem is growing every day! New DeFi protocols and NFT projects keep coming. 🚀✨",
     image: null,
     likes: 124,
     comments: 28,
@@ -80,7 +81,7 @@ const posts = [
     color: "from-blue-500 to-blue-600",
     time: "5m",
     content:
-      "XLM fiyat analizim: Teknik göstergeler pozitif sinyaller veriyor. MACD kesişim noktasında. 📈\n\n#StellarLumens #XLM #TechnicalAnalysis",
+      "My XLM price analysis: Technical indicators are giving positive signals. MACD at intersection point. 📈\n\n#StellarLumens #XLM #TechnicalAnalysis",
     image: null,
     likes: 89,
     comments: 15,
@@ -97,7 +98,7 @@ const posts = [
     color: "from-purple-500 to-pink-500",
     time: "15m",
     content:
-      "Stellar Network üzerindeki NFT koleksiyonum büyüyor! Topluluktan harika sanatçılar çıkıyor. 🎨",
+      "My NFT collection on Stellar Network is growing! Amazing artists are emerging from the community. 🎨",
     image:
       "https://via.placeholder.com/500x300/8b5cf6/ffffff?text=NFT+Collection",
     likes: 256,
@@ -109,9 +110,12 @@ const posts = [
   },
 ];
 
-function StoryItem({ story }) {
+function StoryItem({ story, onAddClick }) {
   return (
-    <div className="flex flex-col items-center space-y-2 cursor-pointer group">
+    <div
+      className="flex flex-col items-center space-y-2 cursor-pointer group"
+      onClick={story.isAdd ? onAddClick : undefined}
+    >
       <div
         className={`relative ${
           story.hasStory
@@ -289,13 +293,19 @@ function CreatePost() {
 }
 
 export default function MainFeed() {
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+
   return (
     <div className="max-w-2xl mx-auto py-6 space-y-6">
       {/* Stories */}
       <div className="bg-card border border-border rounded-2xl p-6">
         <div className="flex space-x-4 overflow-x-auto pb-2">
           {stories.map((story) => (
-            <StoryItem key={story.id} story={story} />
+            <StoryItem
+              key={story.id}
+              story={story}
+              onAddClick={() => setIsPostModalOpen(true)}
+            />
           ))}
         </div>
       </div>
@@ -309,6 +319,12 @@ export default function MainFeed() {
           <PostItem key={post.id} post={post} />
         ))}
       </div>
+
+      {/* Post Modal */}
+      <PostModal
+        isOpen={isPostModalOpen}
+        onClose={() => setIsPostModalOpen(false)}
+      />
     </div>
   );
 }

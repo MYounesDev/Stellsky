@@ -70,14 +70,14 @@ function PostCard({ post, onLike, onComment, onRepost }) {
   return (
     <div className="bg-secondary border border-border rounded-xl p-6 hover:border-primary/30 transition-colors animate-fadeIn">
       <div className="flex space-x-4">
-        {/* Profil Resmi */}
+        {/* Profile Picture */}
         <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center flex-shrink-0">
           <span className="text-white font-medium text-sm">
             {post.author.charAt(0)}
           </span>
         </div>
 
-        {/* Post İçeriği */}
+        {/* Post Content */}
         <div className="flex-1">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
@@ -93,7 +93,7 @@ function PostCard({ post, onLike, onComment, onRepost }) {
 
           <p className="text-foreground mb-4 leading-relaxed">{post.content}</p>
 
-          {/* Etkileşim Butonları */}
+          {/* Interaction Buttons */}
           <div className="flex items-center justify-between max-w-md">
             <button
               onClick={handleLike}

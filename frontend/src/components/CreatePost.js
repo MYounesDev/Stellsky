@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Image as ImageIcon, Smile, Send, X } from "lucide-react";
-import { useStellar } from "../hooks/useStellar";
+import { useStellar } from "../contexts/StellarContext";
 
 export default function CreatePost() {
   const { isConnected, formatPublicKey, publicKey } = useStellar();
@@ -48,14 +48,14 @@ export default function CreatePost() {
     <div className="bg-secondary rounded-xl border border-border animate-fadeIn">
       <form onSubmit={handleSubmit} className="p-6">
         <div className="flex space-x-4">
-          {/* Profil resmi */}
+          {/* Profile picture */}
           <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center flex-shrink-0">
             <span className="text-white font-medium text-sm">
               {formatPublicKey(publicKey).charAt(0)}
             </span>
           </div>
 
-          {/* Post içeriği */}
+          {/* Post content */}
           <div className="flex-1">
             <textarea
               value={content}
@@ -66,7 +66,7 @@ export default function CreatePost() {
               maxLength="280"
             />
 
-            {/* Karakter sayacı */}
+            {/* Character counter */}
             <div className="flex justify-between items-center mt-4">
               <div className="text-xs text-muted">{content.length}/280</div>
 
@@ -83,7 +83,7 @@ export default function CreatePost() {
           </div>
         </div>
 
-        {/* Alt kısım - Araçlar ve Gönder butonu */}
+        {/* Bottom section - Tools and Post button */}
         <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
           <div className="flex items-center space-x-3">
             <button

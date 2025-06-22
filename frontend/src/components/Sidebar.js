@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import {
   Home,
   Search,
@@ -14,18 +16,19 @@ import {
   LogOut,
   Plus,
 } from "lucide-react";
-import { useStellar } from "../hooks/useStellar";
+import { useStellar } from "../contexts/StellarContext";
+import PostModal from "./PostModal";
 
 const navigationItems = [
-  { icon: Home, label: "Ana Sayfa", active: true },
-  { icon: Search, label: "Keşfet" },
-  { icon: Bell, label: "Bildirimler", badge: 3 },
-  { icon: Mail, label: "Mesajlar", badge: 12 },
-  { icon: Bookmark, label: "Kaydedilenler" },
-  { icon: TrendingUp, label: "Trendler" },
-  { icon: Users, label: "Topluluklar" },
-  { icon: User, label: "Profil" },
-  { icon: Settings, label: "Ayarlar" },
+  { icon: Home, label: "Home", active: true },
+  { icon: Search, label: "Explore" },
+  { icon: Bell, label: "Notifications", badge: 3 },
+  { icon: Mail, label: "Messages", badge: 12 },
+  { icon: Bookmark, label: "Bookmarks" },
+  { icon: TrendingUp, label: "Trends" },
+  { icon: Users, label: "Communities" },
+  { icon: User, label: "Profile" },
+  { icon: Settings, label: "Settings" },
 ];
 
 const trendingTopics = [
@@ -159,6 +162,7 @@ function QuickActions() {
 export default function Sidebar() {
   const { isConnected, publicKey, formatPublicKey, disconnectWallet } =
     useStellar();
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
 
   return (
     <div className="w-20 h-full bg-background border-r border-border flex flex-col">
@@ -202,6 +206,7 @@ export default function Sidebar() {
         {/* Post Button */}
         <div className="mt-8">
           <button
+            onClick={() => setIsPostModalOpen(true)}
             className="w-full bg-gradient-to-r from-primary to-accent text-white font-semibold p-3 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center"
             title="Post to Stellsky"
           >
@@ -251,6 +256,12 @@ export default function Sidebar() {
           </div>
         </div>
       )}
+
+      {/* Post Modal */}
+      <PostModal
+        isOpen={isPostModalOpen}
+        onClose={() => setIsPostModalOpen(false)}
+      />
     </div>
   );
 }

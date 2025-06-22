@@ -21,7 +21,7 @@ export default function Home() {
           <MainFeed />
         </div>
 
-        {/* Sağ Sidebar - Trending */}
+        {/* Right Sidebar - Trending */}
         <div className="sticky top-16 h-[calc(100vh-4rem)]">
           <TrendingSidebar />
         </div>

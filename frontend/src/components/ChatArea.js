@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Hash, Send, Plus, Smile, Gift } from "lucide-react";
-import { useStellar } from "../hooks/useStellar";
+import { useStellar } from "../contexts/StellarContext";
 
 const messages = [
   {
@@ -70,7 +70,7 @@ export default function ChatArea() {
     e.preventDefault();
     if (!newMessage.trim() || !isConnected) return;
 
-    // Burada mesaj gönderme logic'i olacak
+    // Message sending logic will be here
     console.log("Sending message:", newMessage);
     setNewMessage("");
   };
@@ -151,7 +151,7 @@ export default function ChatArea() {
         ) : (
           <div className="bg-secondary rounded-lg border border-border p-4 text-center">
             <p className="text-muted mb-2">
-              Mesaj göndermek için Stellar cüzdanınızı bağlamanız gerekiyor
+              You need to connect your Stellar wallet to send messages
             </p>
             <p className="text-xs text-muted">
               Sağ üst köşedeki "Cüzdan Bağla" butonunu kullanın

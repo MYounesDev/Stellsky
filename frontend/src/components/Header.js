@@ -1,6 +1,6 @@
 "use client";
 
-import { useStellar } from "../hooks/useStellar";
+import { useStellar } from "../contexts/StellarContext";
 import {
   Search,
   Bell,
@@ -39,7 +39,7 @@ export default function Header() {
         {/* Sol boşluk */}
         <div className="w-20"></div>
 
-        {/* Orta - Logo */}
+        {/* Center - Logo */}
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
             <span className="text-white font-bold text-lg">S</span>
@@ -85,7 +85,7 @@ export default function Header() {
                   className="bg-gradient-to-r from-primary to-accent text-white px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-opacity flex items-center space-x-2"
                 >
                   <Wallet className="w-4 h-4" />
-                  <span>Giriş Yap</span>
+                  <span>Sign In</span>
                 </button>
               ) : (
                 <div className="flex items-center space-x-2 bg-card border border-border p-2 rounded-full">
