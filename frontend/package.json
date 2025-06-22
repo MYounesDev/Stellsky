@@ -1,0 +1,28 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "^12.3.0",
+    "asynckit": "^0.4.0",
+    "combined-stream": "^1.0.8",
+    "es-set-tostringtag": "^2.1.0",
+    "has-flag": "^5.0.1",
+    "lucide-react": "^0.400.0",
+    "mime-types": "^3.0.1",
+    "next": "15.3.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4.1.10"
+  }
+}

@@ -1,0 +1,49 @@
+Help me refactor and implement the backend logic for login, account creation, and post control endpoints for a Web3-based application.
+
+Requirements:
+Authentication:
+
+Users should not sign in using traditional email/password.
+
+Instead, users authenticate using their crypto wallet (e.g. MetaMask).
+
+You can check the logic in the frontend under frontend/src/hooks.
+
+Database:
+
+Use MongoDB for data storage.
+
+The MongoDB connection string is located in server/.env.
+
+Create and use two collections: users and posts.
+
+Session Management:
+
+Frontend should check if a user is signed in by sending a request to the backend using the API functions in frontend/src/services/api.js.
+
+Design the backend so that it supports this check (e.g., using middleware or token verification).
+
+Posts Collection:
+
+Each post should include the following fields:
+
+id
+
+author (wallet address)
+
+text
+
+image (URL or base64 string)
+
+Deliverables:
+Adjusted and secure backend endpoints for:
+
+Login (wallet-based)
+
+Account creation (optional depending on login flow)
+
+Posting (create, read, maybe delete)
+
+Any necessary middleware for checking wallet signatures or sessions.
+
+Clear API responses for frontend integration.

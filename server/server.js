@@ -7,6 +7,10 @@ import swaggerUi from "swagger-ui-express";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import { connectToDatabase } from "./utils/db.js";
+import authRoutes from "./routes/auth.routes.js";
+import postsRoutes from "./routes/posts.routes.js";
+
 
 dotenv.config();
 
@@ -65,6 +69,7 @@ app.get("/health", (req, res) => {
   });
 });
 
+
 // API Routes
 app.get("/api", (req, res) => {
   res.json({
@@ -73,16 +78,15 @@ app.get("/api", (req, res) => {
     endpoints: {
       health: "/health",
       docs: "/api-docs",
+      auth: "/api/auth",
+      posts: "/api/posts"
     },
   });
 });
 
-// Routes placeholder
-/**
-app.use('/api/users', userRoutes);
-app.use('/api/listings', listingRoutes);
-app.use('/api/wallet', walletRoutes);
- */
+// Register routes
+app.use('/api/auth', authRoutes);
+app.use('/api/posts', postsRoutes);
 
 // Swagger Documentation
 app.use(
@@ -94,13 +98,16 @@ app.use(
   })
 );
 
+
+/*
 // 404 handler
 app.use("*", (req, res) => {
   res.status(404).json({
     error: "Route not found",
     message: `The requested endpoint ${req.method} ${req.originalUrl} was not found.`,
   });
-});
+}); */
+
 
 // Global error handler
 app.use((err, req, res, next) => {
@@ -118,23 +125,31 @@ app.use((err, req, res, next) => {
   }
 });
 
+// Connect to database before starting server
+connectToDatabase()
+  .then(() => {
+    // Start the server
+    const server = app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`📚 Swagger Documentation: http://localhost:${PORT}/api-docs`);
+      console.log(`🏥 Health Check: http://localhost:${PORT}/health`);
+      console.log(`🌍 Environment: ${NODE_ENV}`);
+    });
+  })
+  .catch(err => {
+    console.error("Failed to connect to database", err);
+    process.exit(1);
+  });
+
 // Graceful shutdown
-process.on("SIGTERM", () => {
+process.on("SIGTERM", async () => {
   console.log("SIGTERM received. Shutting down gracefully...");
   process.exit(0);
 });
 
-process.on("SIGINT", () => {
+process.on("SIGINT", async () => {
   console.log("SIGINT received. Shutting down gracefully...");
   process.exit(0);
-});
-
-// Start the server
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📚 Swagger Documentation: http://localhost:${PORT}/api-docs`);
-  console.log(`🏥 Health Check: http://localhost:${PORT}/health`);
-  console.log(`🌍 Environment: ${NODE_ENV}`);
 });
 
 export default app;
