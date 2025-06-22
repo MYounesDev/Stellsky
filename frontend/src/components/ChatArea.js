@@ -10,33 +10,33 @@ const messages = [
     user: "CryptoMaster",
     avatar: "C",
     color: "from-blue-500 to-blue-600",
-    timestamp: "Bugün 14:32",
-    content: "Stellar network'ün son güncellemesi gerçekten etkileyici! 🚀",
+    timestamp: "Today 14:32",
+    content: "Stellar network's latest update is truly impressive! 🚀",
   },
   {
     id: 2,
     user: "BlockchainDev",
     avatar: "B",
     color: "from-green-500 to-green-600",
-    timestamp: "Bugün 14:35",
-    content:
-      "Yeni DeFi protokolleri üzerinde çalışıyorum. Stellsky'da paylaşım yapmayı planlıyorum.",
+    timestamp: "Today 14:35",
+    content: "Working on new DeFi protocols. Planning to share on Stellsky.",
   },
   {
     id: 3,
     user: "StellarFan",
     avatar: "⭐",
     color: "from-yellow-500 to-orange-500",
-    timestamp: "Bugün 14:38",
-    content: "Bu platform harika! Merkezi olmayan sosyal medya geleceği budur.",
+    timestamp: "Today 14:38",
+    content:
+      "This platform is amazing! This is the future of decentralized social media.",
   },
   {
     id: 4,
     user: "DeFiExplorer",
     avatar: "D",
     color: "from-purple-500 to-pink-500",
-    timestamp: "Bugün 14:42",
-    content: "Kimse XLM'in son fiyat hareketlerini takip ediyor mu? 📈",
+    timestamp: "Today 14:42",
+    content: "Is anyone tracking XLM's recent price movements? 📈",
   },
 ];
 
@@ -71,7 +71,7 @@ export default function ChatArea() {
     if (!newMessage.trim() || !isConnected) return;
 
     // Burada mesaj gönderme logic'i olacak
-    console.log("Mesaj gönderiliyor:", newMessage);
+    console.log("Sending message:", newMessage);
     setNewMessage("");
   };
 
@@ -82,7 +82,7 @@ export default function ChatArea() {
         <Hash className="w-6 h-6 text-muted mr-2" />
         <h1 className="text-xl font-bold text-foreground">genel</h1>
         <div className="ml-4 text-sm text-muted">
-          Stellsky topluluğu için genel sohbet kanalı
+          General chat channel for Stellsky community
         </div>
       </div>
 
@@ -112,7 +112,7 @@ export default function ChatArea() {
                   <textarea
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="#genel kanalına mesaj gönder"
+                    placeholder="Send message to #general channel"
                     className="w-full bg-transparent text-foreground placeholder-muted resize-none border-none outline-none max-h-32"
                     rows="1"
                     onKeyDown={(e) => {

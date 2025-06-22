@@ -69,7 +69,7 @@ export function useStellar() {
     localStorage.removeItem("stellar_public_key");
   };
 
-  // Sayfa yüklendiğinde önceki bağlantıyı kontrol et
+  // Check previous connection when page loads
   useEffect(() => {
     const savedKey = localStorage.getItem("stellar_public_key");
     if (savedKey) {

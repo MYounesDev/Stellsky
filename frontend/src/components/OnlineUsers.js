@@ -9,7 +9,7 @@ const onlineUsers = [
     avatar: "S",
     color: "from-primary to-accent",
     status: "online",
-    activity: "Stellsky'da geziniyor",
+    activity: "Browsing Stellsky",
     role: "admin",
   },
   {

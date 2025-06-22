@@ -237,16 +237,14 @@ function CreatePost() {
     e.preventDefault();
     if (!postContent.trim() || !isConnected) return;
 
-    console.log("Post gönderiliyor:", postContent);
+    console.log("Posting:", postContent);
     setPostContent("");
   };
 
   if (!isConnected) {
     return (
       <div className="bg-card border border-border rounded-2xl p-6 text-center">
-        <p className="text-muted mb-4">
-          Stellsky'da paylaşım yapmak için giriş yapın
-        </p>
+        <p className="text-muted mb-4">Sign in to post on Stellsky</p>
         <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full mx-auto opacity-50"></div>
       </div>
     );
@@ -266,7 +264,7 @@ function CreatePost() {
             <textarea
               value={postContent}
               onChange={(e) => setPostContent(e.target.value)}
-              placeholder="Stellar ekosisteminde neler oluyor?"
+              placeholder="What's happening in Stellar ecosystem?"
               className="w-full bg-transparent text-foreground placeholder-muted resize-none border-none outline-none text-lg"
               rows="3"
               maxLength="280"
@@ -280,7 +278,7 @@ function CreatePost() {
                 disabled={!postContent.trim()}
                 className="bg-gradient-to-r from-primary to-accent text-white px-8 py-2 rounded-full font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Paylaş
+                Post
               </button>
             </div>
           </div>

@@ -9,14 +9,14 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 
-// Örnek post verileri
+// Sample post data
 const samplePosts = [
   {
     id: 1,
     author: "GALP...XYZ9",
     content:
-      "Stellar blockchain'i gerçekten muhteşem! Hızlı işlemler ve düşük ücretler 🚀",
-    timestamp: "2 saat önce",
+      "Stellar blockchain is truly amazing! Fast transactions and low fees 🚀",
+    timestamp: "2 hours ago",
     likes: 24,
     comments: 8,
     reposts: 3,
@@ -26,8 +26,8 @@ const samplePosts = [
     id: 2,
     author: "GDBX...ABC3",
     content:
-      "Yeni DeFi projemiz yakında Stellar üzerinde lansmanını yapacak. Topluluğumuzun desteği için teşekkürler! 💜",
-    timestamp: "4 saat önce",
+      "Our new DeFi project will launch on Stellar soon. Thanks for our community's support! 💜",
+    timestamp: "4 hours ago",
     likes: 156,
     comments: 32,
     reposts: 18,
@@ -37,8 +37,8 @@ const samplePosts = [
     id: 3,
     author: "GCQR...DEF7",
     content:
-      "Web3 dünyasında sosyal medya deneyimi nasıl olmalı? Stellsky ile geleceği şekillendiriyoruz! 🌟",
-    timestamp: "6 saat önce",
+      "How should social media experience be in Web3 world? We're shaping the future with Stellsky! 🌟",
+    timestamp: "6 hours ago",
     likes: 89,
     comments: 21,
     reposts: 12,
@@ -48,8 +48,8 @@ const samplePosts = [
     id: 4,
     author: "GXYZ...HIJ2",
     content:
-      "Merkezi olmayan sosyal ağların gücü! Verilerimiz bizim kontrolümüzde olmalı. #Web3 #Stellar",
-    timestamp: "8 saat önce",
+      "The power of decentralized social networks! Our data should be under our control. #Web3 #Stellar",
+    timestamp: "8 hours ago",
     likes: 73,
     comments: 15,
     reposts: 9,
@@ -138,7 +138,7 @@ export default function Feed() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simüle edilen veri yükleme
+    // Simulated data loading
     const loadPosts = async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setPosts(samplePosts);
@@ -149,15 +149,15 @@ export default function Feed() {
   }, []);
 
   const handleLike = (postId, liked) => {
-    console.log(`Post ${postId} ${liked ? "beğenildi" : "beğeni kaldırıldı"}`);
+    console.log(`Post ${postId} ${liked ? "liked" : "unliked"}`);
   };
 
   const handleComment = (postId) => {
-    console.log(`Post ${postId} için yorum sayfası açılacak`);
+    console.log(`Comment page will open for post ${postId}`);
   };
 
   const handleRepost = (postId) => {
-    console.log(`Post ${postId} yeniden paylaşıldı`);
+    console.log(`Post ${postId} reposted`);
   };
 
   if (isLoading) {

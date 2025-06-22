@@ -47,7 +47,7 @@ function TrendingCard() {
     <div className="bg-secondary border border-border rounded-xl p-6">
       <div className="flex items-center space-x-2 mb-4">
         <TrendingUp className="w-5 h-5 text-primary" />
-        <h3 className="font-semibold text-foreground">Gündem</h3>
+        <h3 className="font-semibold text-foreground">Trending</h3>
       </div>
 
       <div className="space-y-3">
@@ -58,7 +58,7 @@ function TrendingCard() {
           >
             <div>
               <p className="font-medium text-primary">{item.topic}</p>
-              <p className="text-sm text-muted">{item.posts} gönderi</p>
+              <p className="text-sm text-muted">{item.posts} posts</p>
             </div>
             <div className="w-2 h-2 bg-accent rounded-full animate-pulse-custom"></div>
           </div>
@@ -73,7 +73,7 @@ function SuggestedUsers() {
     <div className="bg-secondary border border-border rounded-xl p-6">
       <div className="flex items-center space-x-2 mb-4">
         <Users className="w-5 h-5 text-primary" />
-        <h3 className="font-semibold text-foreground">Önerilen Kullanıcılar</h3>
+        <h3 className="font-semibold text-foreground">Suggested Users</h3>
       </div>
 
       <div className="space-y-4">
@@ -89,12 +89,12 @@ function SuggestedUsers() {
                 <p className="font-medium text-foreground text-sm">
                   {user.address}
                 </p>
-                <p className="text-xs text-muted">{user.followers} takipçi</p>
+                <p className="text-xs text-muted">{user.followers} followers</p>
               </div>
             </div>
 
             <button className="bg-primary text-white px-3 py-1 rounded-full text-sm font-medium hover:bg-primary-dark transition-colors">
-              Takip Et
+              Follow
             </button>
           </div>
         ))}
@@ -108,20 +108,20 @@ function QuickStats() {
     <div className="bg-secondary border border-border rounded-xl p-6">
       <div className="flex items-center space-x-2 mb-4">
         <TrendingUp className="w-5 h-5 text-primary" />
-        <h3 className="font-semibold text-foreground">İstatistikler</h3>
+        <h3 className="font-semibold text-foreground">Statistics</h3>
       </div>
 
       <div className="space-y-3">
         <div className="flex justify-between items-center">
-          <span className="text-muted text-sm">Toplam Kullanıcı</span>
+          <span className="text-muted text-sm">Total Users</span>
           <span className="font-semibold text-foreground">24.8K</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-muted text-sm">Günlük Aktif</span>
+          <span className="text-muted text-sm">Daily Active</span>
           <span className="font-semibold text-foreground">3.2K</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-muted text-sm">Toplam Post</span>
+          <span className="text-muted text-sm">Total Posts</span>
           <span className="font-semibold text-foreground">158K</span>
         </div>
         <div className="w-full bg-border rounded-full h-2 mt-4">
@@ -130,7 +130,7 @@ function QuickStats() {
             style={{ width: "68%" }}
           ></div>
         </div>
-        <p className="text-xs text-muted text-center">Ağ Aktivitesi</p>
+        <p className="text-xs text-muted text-center">Network Activity</p>
       </div>
     </div>
   );
@@ -139,17 +139,17 @@ function QuickStats() {
 function QuickActions() {
   return (
     <div className="bg-secondary border border-border rounded-xl p-6">
-      <h3 className="font-semibold text-foreground mb-4">Hızlı Erişim</h3>
+      <h3 className="font-semibold text-foreground mb-4">Quick Access</h3>
 
       <div className="space-y-2">
         <button className="w-full flex items-center space-x-3 p-3 text-left hover:bg-background rounded-lg transition-colors">
           <Settings className="w-4 h-4 text-muted" />
-          <span className="text-sm text-foreground">Ayarlar</span>
+          <span className="text-sm text-foreground">Settings</span>
         </button>
 
         <button className="w-full flex items-center space-x-3 p-3 text-left hover:bg-background rounded-lg transition-colors">
           <Settings className="w-4 h-4 text-muted" />
-          <span className="text-sm text-foreground">Hakkında</span>
+          <span className="text-sm text-foreground">About</span>
         </button>
       </div>
     </div>
@@ -203,7 +203,7 @@ export default function Sidebar() {
         <div className="mt-8">
           <button
             className="w-full bg-gradient-to-r from-primary to-accent text-white font-semibold p-3 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center"
-            title="Stellsky'la Paylaş"
+            title="Post to Stellsky"
           >
             <Plus className="w-6 h-6" />
           </button>
@@ -241,7 +241,7 @@ export default function Sidebar() {
                   onClick={disconnectWallet}
                   className="flex-1 text-red-500 hover:bg-red-500/10 px-2 py-1 rounded text-xs font-medium transition-colors"
                 >
-                  Çıkış Yap
+                  Sign Out
                 </button>
                 <button className="p-1 text-muted hover:text-foreground hover:bg-hover rounded transition-colors">
                   <MoreHorizontal className="w-3 h-3" />
