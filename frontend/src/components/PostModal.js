@@ -11,39 +11,46 @@ import {
   Lock,
 } from "lucide-react";
 import { useStellar } from "../contexts/StellarContext";
+import apiService from "../lib/api";
 
-export default function PostModal({ isOpen, onClose }) {
+export default function PostModal({ isOpen, onClose, onPostCreated }) {
   const { isConnected, formatPublicKey, publicKey } = useStellar();
   const [content, setContent] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const [privacy, setPrivacy] = useState("public"); // public, followers, private
   const [selectedImage, setSelectedImage] = useState(null);
+  const [postError, setPostError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!content.trim() || !isConnected) return;
+    if (!content.trim() || !isConnected || isPosting) return;
 
     setIsPosting(true);
+    setPostError("");
+
     try {
-      // Here API call will be made
-      console.log("Posting:", {
-        content,
-        publicKey,
-        privacy,
-        image: selectedImage,
+      const response = await apiService.createPost({
+        text: content.trim(),
+        image: selectedImage || "",
       });
 
-      // Simulated delay
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      if (response.success) {
+        setContent("");
+        setSelectedImage(null);
+        setPrivacy("public");
 
-      setContent("");
-      setSelectedImage(null);
-      setPrivacy("public");
-      alert("Post shared successfully!");
-      onClose();
+        // Notify parent component to refresh posts
+        if (onPostCreated) {
+          onPostCreated(response.post);
+        }
+
+        onClose();
+      } else {
+        setPostError(response.message || "Failed to create post");
+      }
     } catch (error) {
       console.error("Post sharing error:", error);
-      alert("Error occurred while posting.");
+      setPostError("Failed to create post. Please try again.");
     } finally {
       setIsPosting(false);
     }
@@ -213,6 +220,13 @@ export default function PostModal({ isOpen, onClose }) {
                   ></div>
                 </div>
               </div>
+
+              {/* Error Message */}
+              {postError && (
+                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-500 text-sm">
+                  {postError}
+                </div>
+              )}
             </form>
           )}
         </div>

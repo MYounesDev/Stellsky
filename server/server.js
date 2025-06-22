@@ -11,7 +11,6 @@ import { connectToDatabase } from "./utils/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import postsRoutes from "./routes/posts.routes.js";
 
-
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,11 +37,11 @@ app.use(
   })
 );
 
-// CORS configuration
+// CORS configuration - Allow all origins for now
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    credentials: true,
+    origin: "*", // Allow all origins temporarily for debugging
+    credentials: false, // Disable credentials when using wildcard
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -69,7 +68,6 @@ app.get("/health", (req, res) => {
   });
 });
 
-
 // API Routes
 app.get("/api", (req, res) => {
   res.json({
@@ -79,14 +77,14 @@ app.get("/api", (req, res) => {
       health: "/health",
       docs: "/api-docs",
       auth: "/api/auth",
-      posts: "/api/posts"
+      posts: "/api/posts",
     },
   });
 });
 
 // Register routes
-app.use('/api/auth', authRoutes);
-app.use('/api/posts', postsRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/posts", postsRoutes);
 
 // Swagger Documentation
 app.use(
@@ -98,7 +96,6 @@ app.use(
   })
 );
 
-
 /*
 // 404 handler
 app.use("*", (req, res) => {
@@ -107,7 +104,6 @@ app.use("*", (req, res) => {
     message: `The requested endpoint ${req.method} ${req.originalUrl} was not found.`,
   });
 }); */
-
 
 // Global error handler
 app.use((err, req, res, next) => {
@@ -131,12 +127,14 @@ connectToDatabase()
     // Start the server
     const server = app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
-      console.log(`📚 Swagger Documentation: http://localhost:${PORT}/api-docs`);
+      console.log(
+        `📚 Swagger Documentation: http://localhost:${PORT}/api-docs`
+      );
       console.log(`🏥 Health Check: http://localhost:${PORT}/health`);
       console.log(`🌍 Environment: ${NODE_ENV}`);
     });
   })
-  .catch(err => {
+  .catch((err) => {
     console.error("Failed to connect to database", err);
     process.exit(1);
   });

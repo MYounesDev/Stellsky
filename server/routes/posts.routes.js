@@ -1,6 +1,15 @@
-import express from 'express';
-import { createPost, getPosts, getUserPosts, getPostById, deletePost } from '../controllers/posts.controller.js';
-import { authMiddleware } from '../middleware/auth.middleware.js';
+import express from "express";
+import {
+  createPost,
+  getPosts,
+  getUserPosts,
+  getPostById,
+  deletePost,
+  cleanInvalidImages,
+  likePost,
+  unlikePost,
+} from "../controllers/posts.controller.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
@@ -35,7 +44,7 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
-router.post('/', authMiddleware, createPost);
+router.post("/", authMiddleware, createPost);
 
 /**
  * @swagger
@@ -62,7 +71,7 @@ router.post('/', authMiddleware, createPost);
  *       500:
  *         description: Server error
  */
-router.get('/',authMiddleware, getPosts);
+router.get("/", getPosts); // Public - herkes görebilir
 
 /**
  * @swagger
@@ -95,7 +104,7 @@ router.get('/',authMiddleware, getPosts);
  *       500:
  *         description: Server error
  */
-router.get('/user/:walletAddress', authMiddleware, getUserPosts);
+router.get("/user/:walletAddress", getUserPosts); // Public - herkes görebilir
 
 /**
  * @swagger
@@ -118,7 +127,7 @@ router.get('/user/:walletAddress', authMiddleware, getUserPosts);
  *       500:
  *         description: Server error
  */
-router.get('/:id',authMiddleware, getPostById);
+router.get("/:id", getPostById); // Public - herkes görebilir
 
 /**
  * @swagger
@@ -147,6 +156,28 @@ router.get('/:id',authMiddleware, getPostById);
  *       500:
  *         description: Server error
  */
-router.delete('/:id', authMiddleware, deletePost);
+router.delete("/:id", authMiddleware, deletePost);
 
-export default router; 
+/**
+ * @swagger
+ * /posts/admin/clean-images:
+ *   post:
+ *     summary: Clean invalid image fields (admin only)
+ *     tags: [Posts]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Invalid images cleaned successfully
+ *       500:
+ *         description: Server error
+ */
+router.post("/admin/clean-images", authMiddleware, cleanInvalidImages);
+
+// Like a post
+router.put("/:id/like", authMiddleware, likePost);
+
+// Unlike a post
+router.put("/:id/unlike", authMiddleware, unlikePost);
+
+export default router;

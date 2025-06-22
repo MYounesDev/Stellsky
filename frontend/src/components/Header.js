@@ -11,10 +11,13 @@ import {
   Check,
 } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const {
     isConnected,
+    isLoading,
     publicKey,
     disconnectWallet,
     formatPublicKey,
@@ -25,9 +28,10 @@ export default function Header() {
   } = useStellar();
 
   const [showManualInput, setShowManualInput] = useState(false);
+  const router = useRouter();
 
-  const handleManualConnect = () => {
-    const success = connectWithAddress(manualAddress);
+  const handleManualConnect = async () => {
+    const success = await connectWithAddress(manualAddress);
     if (success) {
       setShowManualInput(false);
     }
@@ -51,23 +55,45 @@ export default function Header() {
 
         {/* Sağ taraf - Giriş */}
         <div className="w-80 flex justify-end">
-          {isConnected ? (
+          {isLoading ? (
+            <div className="flex items-center space-x-2">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+              <span className="text-sm text-muted">Loading...</span>
+            </div>
+          ) : isConnected ? (
             <div className="flex items-center space-x-3">
               <button className="p-2 hover:bg-hover rounded-full transition-colors relative">
                 <Bell className="w-5 h-5 text-muted" />
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full"></span>
               </button>
 
-              <div className="flex items-center space-x-2 bg-card border border-border px-3 py-2 rounded-full">
-                <div className="w-6 h-6 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
-                  <span className="text-white font-medium text-xs">
-                    {formatPublicKey(publicKey).charAt(0).toUpperCase()}
+              {publicKey ? (
+                <div
+                  onClick={() => {
+                    console.log("Profile clicked, publicKey:", publicKey);
+                    router.push(`/profile/${publicKey}`);
+                  }}
+                  className="flex items-center space-x-2 bg-card border border-border px-3 py-2 rounded-full hover:bg-hover transition-colors cursor-pointer"
+                >
+                  <div className="w-6 h-6 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
+                    <span className="text-white font-medium text-xs">
+                      {formatPublicKey(publicKey).charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <span className="text-sm font-medium text-foreground">
+                    {formatPublicKey(publicKey)}
                   </span>
                 </div>
-                <span className="text-sm font-medium text-foreground">
-                  {formatPublicKey(publicKey)}
-                </span>
-              </div>
+              ) : (
+                <div className="flex items-center space-x-2 bg-card border border-border px-3 py-2 rounded-full opacity-50">
+                  <div className="w-6 h-6 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
+                    <span className="text-white font-medium text-xs">U</span>
+                  </div>
+                  <span className="text-sm font-medium text-foreground">
+                    Loading...
+                  </span>
+                </div>
+              )}
 
               <button
                 onClick={disconnectWallet}

@@ -2,15 +2,17 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { StrKey } from "@stellar/stellar-sdk";
+import apiService from "../lib/api";
 
 const StellarContext = createContext();
 
 export function StellarProvider({ children }) {
   const [publicKey, setPublicKey] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [manualAddress, setManualAddress] = useState("");
   const [addressError, setAddressError] = useState("");
+  const [user, setUser] = useState(null);
 
   // Stellar adresi validasyonu
   const validateStellarAddress = (address) => {
@@ -38,7 +40,7 @@ export function StellarProvider({ children }) {
   };
 
   // Manuel adres girişi
-  const connectWithAddress = (address) => {
+  const connectWithAddress = async (address) => {
     const validation = validateStellarAddress(address);
 
     if (!validation.isValid) {
@@ -46,13 +48,32 @@ export function StellarProvider({ children }) {
       return false;
     }
 
-    setPublicKey(address);
-    setIsConnected(true);
-    setAddressError("");
-    setManualAddress("");
-    localStorage.setItem("stellar_public_key", address);
-    console.log("Wallet connected:", address);
-    return true;
+    setIsLoading(true);
+
+    try {
+      // Backend'e login isteği gönder
+      const response = await apiService.login(address);
+
+      if (response.success) {
+        setPublicKey(address);
+        setIsConnected(true);
+        setUser(response.user);
+        setAddressError("");
+        setManualAddress("");
+        localStorage.setItem("stellar_public_key", address);
+        console.log("Wallet connected:", address);
+        return true;
+      } else {
+        setAddressError(response.message || "Login failed");
+        return false;
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setAddressError("Failed to connect to server");
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Manuel adres input değişimi
@@ -64,9 +85,16 @@ export function StellarProvider({ children }) {
   };
 
   // Cüzdan bağlantısını kes
-  const disconnectWallet = () => {
+  const disconnectWallet = async () => {
+    try {
+      await apiService.logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+
     setPublicKey(null);
     setIsConnected(false);
+    setUser(null);
     setManualAddress("");
     setAddressError("");
     localStorage.removeItem("stellar_public_key");
@@ -75,12 +103,38 @@ export function StellarProvider({ children }) {
 
   // Check previous connection when page loads
   useEffect(() => {
-    const savedKey = localStorage.getItem("stellar_public_key");
-    if (savedKey) {
-      setPublicKey(savedKey);
-      setIsConnected(true);
-      console.log("Wallet restored from localStorage:", savedKey);
-    }
+    const checkAuthStatus = async () => {
+      setIsLoading(true);
+
+      try {
+        const token = apiService.getToken();
+        const savedKey = localStorage.getItem("stellar_public_key");
+
+        if (token && savedKey) {
+          // Token'ı doğrula
+          const response = await apiService.checkAuth();
+
+          if (response.success) {
+            setPublicKey(savedKey);
+            setIsConnected(true);
+            setUser(response.user);
+            console.log("Auth restored from localStorage:", savedKey);
+          } else {
+            // Token geçersiz, temizle
+            localStorage.removeItem("stellar_public_key");
+            apiService.removeToken();
+          }
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        localStorage.removeItem("stellar_public_key");
+        apiService.removeToken();
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuthStatus();
   }, []);
 
   // Public key'i kısalt
@@ -93,6 +147,7 @@ export function StellarProvider({ children }) {
     publicKey,
     isConnected,
     isLoading,
+    user,
     disconnectWallet,
     formatPublicKey,
     // Manuel adres girişi

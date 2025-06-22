@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Heart,
   MessageCircle,
@@ -11,9 +11,11 @@ import {
   Plus,
   Play,
 } from "lucide-react";
+import Link from "next/link";
 import { useStellar } from "../contexts/StellarContext";
 import PostModal from "./PostModal";
 import AIMenu from "./AIMenu";
+import apiService from "../lib/api";
 
 // Instagram benzeri Stories
 const stories = [
@@ -55,61 +57,7 @@ const stories = [
   },
 ];
 
-// Twitter benzeri Posts
-const posts = [
-  {
-    id: 1,
-    user: "StellarMaster",
-    username: "@stellarmaster",
-    avatar: "S",
-    color: "from-primary to-accent",
-    time: "2s",
-    content:
-      "Stellar blockchain ecosystem is growing every day! New DeFi protocols and NFT projects keep coming. 🚀✨",
-    image: null,
-    likes: 124,
-    comments: 28,
-    reposts: 45,
-    bookmarks: 12,
-    liked: false,
-    verified: true,
-  },
-  {
-    id: 2,
-    user: "CryptoAnalyst",
-    username: "@cryptoanalyst",
-    avatar: "C",
-    color: "from-blue-500 to-blue-600",
-    time: "5m",
-    content:
-      "My XLM price analysis: Technical indicators are giving positive signals. MACD at intersection point. 📈\n\n#StellarLumens #XLM #TechnicalAnalysis",
-    image: null,
-    likes: 89,
-    comments: 15,
-    reposts: 23,
-    bookmarks: 7,
-    liked: true,
-    verified: false,
-  },
-  {
-    id: 3,
-    user: "NFTCollector",
-    username: "@nftcollector",
-    avatar: "N",
-    color: "from-purple-500 to-pink-500",
-    time: "15m",
-    content:
-      "My NFT collection on Stellar Network is growing! Amazing artists are emerging from the community. 🎨",
-    image:
-      "https://via.placeholder.com/500x300/8b5cf6/ffffff?text=NFT+Collection",
-    likes: 256,
-    comments: 42,
-    reposts: 67,
-    bookmarks: 34,
-    liked: false,
-    verified: true,
-  },
-];
+// Dummy posts array removed - now using backend data
 
 function StoryItem({ story, onAddClick }) {
   return (
@@ -147,36 +95,90 @@ function StoryItem({ story, onAddClick }) {
 }
 
 function PostItem({ post }) {
-  const [isLiked, setIsLiked] = useState(post.liked);
-  const [likeCount, setLikeCount] = useState(post.likes);
+  const { publicKey, isConnected } = useStellar();
+  const [isLiked, setIsLiked] = useState(
+    post.likes?.includes(publicKey) || false
+  );
+  const [likeCount, setLikeCount] = useState(post.likesCount || 0);
+  const [isLiking, setIsLiking] = useState(false);
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
+  const handleLike = async () => {
+    if (!isConnected || isLiking) return;
+
+    setIsLiking(true);
+    try {
+      if (isLiked) {
+        // Unlike
+        const response = await apiService.unlikePost(post._id || post.id);
+        if (response.success) {
+          setIsLiked(false);
+          setLikeCount(response.likesCount);
+        }
+      } else {
+        // Like
+        const response = await apiService.likePost(post._id || post.id);
+        if (response.success) {
+          setIsLiked(true);
+          setLikeCount(response.likesCount);
+        }
+      }
+    } catch (error) {
+      console.error("Error liking/unliking post:", error);
+    } finally {
+      setIsLiking(false);
+    }
+  };
+
+  // Format timestamp
+  const formatTime = (timestamp) => {
+    if (!timestamp) return "now";
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffMins < 1) return "now";
+    if (diffMins < 60) return `${diffMins}m`;
+    if (diffHours < 24) return `${diffHours}h`;
+    return `${diffDays}d`;
+  };
+
+  // Generate avatar from wallet address
+  const getAvatar = (walletAddress) => {
+    if (!walletAddress) return "U";
+    return walletAddress.charAt(1).toUpperCase();
+  };
+
+  // Format wallet address
+  const formatWalletAddress = (address) => {
+    if (!address) return "";
+    return `${address.substring(0, 4)}...${address.substring(
+      address.length - 4
+    )}`;
   };
 
   return (
     <div className="bg-card border border-border rounded-2xl p-6 hover:border-primary/30 transition-all">
       <div className="flex space-x-4">
-        <div
-          className={`w-12 h-12 bg-gradient-to-br ${post.color} rounded-full flex items-center justify-center flex-shrink-0`}
-        >
-          <span className="text-white font-bold">{post.avatar}</span>
+        <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center flex-shrink-0">
+          <span className="text-white font-bold">
+            {getAvatar(post.walletAddress)}
+          </span>
         </div>
 
         <div className="flex-1">
           <div className="flex items-center space-x-2 mb-3">
-            <span className="font-semibold text-foreground hover:underline cursor-pointer">
-              {post.user}
-            </span>
-            {post.verified && (
-              <div className="w-4 h-4 bg-primary rounded-full flex items-center justify-center">
-                <span className="text-white text-xs">✓</span>
-              </div>
-            )}
-            <span className="text-muted text-sm">{post.username}</span>
+            <Link href={`/profile/${post.walletAddress}`}>
+              <span className="font-semibold text-foreground hover:underline cursor-pointer">
+                {formatWalletAddress(post.walletAddress)}
+              </span>
+            </Link>
             <span className="text-muted">·</span>
-            <span className="text-muted text-sm">{post.time}</span>
+            <span className="text-muted text-sm">
+              {formatTime(post.createdAt)}
+            </span>
 
             <div className="ml-auto">
               <button className="p-2 text-muted hover:text-foreground hover:bg-hover rounded-full transition-colors">
@@ -186,15 +188,18 @@ function PostItem({ post }) {
           </div>
 
           <p className="text-foreground leading-relaxed mb-4 whitespace-pre-line">
-            {post.content}
+            {post.text || post.content}
           </p>
 
-          {post.image && (
+          {post.image && post.image.trim() && post.image.startsWith("http") && (
             <div className="mb-4 rounded-xl overflow-hidden">
               <img
                 src={post.image}
                 alt="Post image"
                 className="w-full h-64 object-cover"
+                onError={(e) => {
+                  e.target.style.display = "none";
+                }}
               />
             </div>
           )}
@@ -202,11 +207,16 @@ function PostItem({ post }) {
           <div className="flex items-center justify-between pt-2">
             <button
               onClick={handleLike}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-full transition-colors hover:bg-red-500/10 ${
+              disabled={isLiking || !isConnected}
+              className={`flex items-center space-x-2 px-3 py-2 rounded-full transition-colors hover:bg-red-500/10 disabled:opacity-50 disabled:cursor-not-allowed ${
                 isLiked ? "text-red-500" : "text-muted hover:text-red-500"
               }`}
             >
-              <Heart className={`w-5 h-5 ${isLiked ? "fill-current" : ""}`} />
+              <Heart
+                className={`w-5 h-5 ${isLiked ? "fill-current" : ""} ${
+                  isLiking ? "animate-pulse" : ""
+                }`}
+              />
               <span className="text-sm font-medium">{likeCount}</span>
             </button>
 
@@ -234,16 +244,40 @@ function PostItem({ post }) {
   );
 }
 
-function CreatePost() {
+function CreatePost({ onPostCreated }) {
   const [postContent, setPostContent] = useState("");
+  const [isPosting, setIsPosting] = useState(false);
+  const [postError, setPostError] = useState("");
   const { isConnected, formatPublicKey, publicKey } = useStellar();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!postContent.trim() || !isConnected) return;
+    if (!postContent.trim() || !isConnected || isPosting) return;
 
-    console.log("Posting:", postContent);
-    setPostContent("");
+    setIsPosting(true);
+    setPostError("");
+
+    try {
+      const response = await apiService.createPost({
+        text: postContent.trim(),
+      });
+
+      if (response.success) {
+        setPostContent("");
+        console.log("Post created successfully:", response.post);
+        // Notify parent component to refresh posts
+        if (onPostCreated) {
+          onPostCreated(response.post);
+        }
+      } else {
+        setPostError(response.message || "Failed to create post");
+      }
+    } catch (error) {
+      console.error("Post creation error:", error);
+      setPostError("Failed to create post. Please try again.");
+    } finally {
+      setIsPosting(false);
+    }
   };
 
   if (!isConnected) {
@@ -280,12 +314,18 @@ function CreatePost() {
 
               <button
                 type="submit"
-                disabled={!postContent.trim()}
+                disabled={!postContent.trim() || isPosting}
                 className="bg-gradient-to-r from-primary to-accent text-white px-8 py-2 rounded-full font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Post
+                {isPosting ? "Posting..." : "Post"}
               </button>
             </div>
+
+            {postError && (
+              <div className="mt-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-500 text-sm">
+                {postError}
+              </div>
+            )}
           </div>
         </div>
       </form>
@@ -295,6 +335,44 @@ function CreatePost() {
 
 export default function MainFeed() {
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [postsLoading, setPostsLoading] = useState(true);
+  const [postsError, setPostsError] = useState("");
+  const { isConnected, isLoading } = useStellar();
+
+  // Load posts from backend
+  useEffect(() => {
+    const loadPosts = async () => {
+      // Don't try to load posts if still loading auth or not connected
+      if (isLoading || !isConnected) {
+        setPostsLoading(false);
+        return;
+      }
+
+      try {
+        setPostsLoading(true);
+        const response = await apiService.getPosts(1, 20);
+
+        if (response.success) {
+          setPosts(response.posts || []);
+        } else {
+          setPostsError(response.message || "Failed to load posts");
+        }
+      } catch (error) {
+        console.error("Error loading posts:", error);
+        setPostsError("Failed to load posts");
+      } finally {
+        setPostsLoading(false);
+      }
+    };
+
+    loadPosts();
+  }, [isConnected, isLoading]);
+
+  // Handle new post creation
+  const handlePostCreated = (newPost) => {
+    setPosts((prevPosts) => [newPost, ...prevPosts]);
+  };
 
   return (
     <div className="max-w-2xl mx-auto py-6 space-y-6">
@@ -315,19 +393,38 @@ export default function MainFeed() {
       <AIMenu />
 
       {/* Create Post */}
-      <CreatePost />
+      <CreatePost onPostCreated={handlePostCreated} />
 
       {/* Posts Feed */}
       <div className="space-y-6">
-        {posts.map((post) => (
-          <PostItem key={post.id} post={post} />
-        ))}
+        {postsLoading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+            <p className="text-muted mt-2">Loading posts...</p>
+          </div>
+        ) : postsError ? (
+          <div className="text-center py-8">
+            <p className="text-red-500">{postsError}</p>
+          </div>
+        ) : posts.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-muted">No posts available</p>
+            <p className="text-sm text-muted mt-1">
+              Be the first to share something!
+            </p>
+          </div>
+        ) : (
+          posts.map((post) => (
+            <PostItem key={post._id || post.id} post={post} />
+          ))
+        )}
       </div>
 
       {/* Post Modal */}
       <PostModal
         isOpen={isPostModalOpen}
         onClose={() => setIsPostModalOpen(false)}
+        onPostCreated={handlePostCreated}
       />
     </div>
   );
