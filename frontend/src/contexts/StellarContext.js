@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { StrKey } from "@stellar/stellar-sdk";
 
-export function useStellar() {
+const StellarContext = createContext();
+
+export function StellarProvider({ children }) {
   const [publicKey, setPublicKey] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -13,25 +15,25 @@ export function useStellar() {
   // Stellar adresi validasyonu
   const validateStellarAddress = (address) => {
     if (!address || address.trim() === "") {
-      return { isValid: false, error: "Lütfen bir adres girin" };
+      return { isValid: false, error: "Please enter an address" };
     }
 
     if (!address.startsWith("G")) {
-      return { isValid: false, error: "Stellar adresi G ile başlamalıdır" };
+      return { isValid: false, error: "Stellar address must start with G" };
     }
 
     if (address.length !== 56) {
-      return { isValid: false, error: "Stellar adresi 56 karakter olmalıdır" };
+      return { isValid: false, error: "Stellar address must be 56 characters" };
     }
 
     try {
       const isValid = StrKey.isValidEd25519PublicKey(address);
       if (!isValid) {
-        return { isValid: false, error: "Geçersiz Stellar adresi formatı" };
+        return { isValid: false, error: "Invalid Stellar address format" };
       }
       return { isValid: true, error: "" };
     } catch (error) {
-      return { isValid: false, error: "Geçersiz Stellar adresi" };
+      return { isValid: false, error: "Invalid Stellar address" };
     }
   };
 
@@ -49,6 +51,7 @@ export function useStellar() {
     setAddressError("");
     setManualAddress("");
     localStorage.setItem("stellar_public_key", address);
+    console.log("Wallet connected:", address);
     return true;
   };
 
@@ -67,6 +70,7 @@ export function useStellar() {
     setManualAddress("");
     setAddressError("");
     localStorage.removeItem("stellar_public_key");
+    console.log("Wallet disconnected");
   };
 
   // Check previous connection when page loads
@@ -75,6 +79,7 @@ export function useStellar() {
     if (savedKey) {
       setPublicKey(savedKey);
       setIsConnected(true);
+      console.log("Wallet restored from localStorage:", savedKey);
     }
   }, []);
 
@@ -84,7 +89,7 @@ export function useStellar() {
     return `${key.substring(0, 4)}...${key.substring(key.length - 4)}`;
   };
 
-  return {
+  const value = {
     publicKey,
     isConnected,
     isLoading,
@@ -97,4 +102,16 @@ export function useStellar() {
     handleAddressChange,
     validateStellarAddress,
   };
+
+  return (
+    <StellarContext.Provider value={value}>{children}</StellarContext.Provider>
+  );
+}
+
+export function useStellar() {
+  const context = useContext(StellarContext);
+  if (!context) {
+    throw new Error("useStellar must be used within a StellarProvider");
+  }
+  return context;
 }
