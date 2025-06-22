@@ -1,248 +1,111 @@
-# Stellsky 🌟
+🚀 Stellsky — Decentralized, AI-Powered Social Media Platform
+Stellsky is a next-generation decentralized social media platform that redefines digital expression and ownership by combining the power of Web3, Artificial Intelligence, and NFT technology. Designed for the modern user, Stellsky allows individuals not only to express themselves but also to own and monetize their content in meaningful ways.
 
-**Stellar blockchain tabanlı sosyal medya platformu** - Kullanıcıların Stellar cüzdan adresleri ile giriş yapabileceği, post paylaşabileceği ve sosyal etkileşimde bulunabileceği modern bir web uygulaması.
+🎯 Project Vision
+In an age where social media platforms are centralized, data is exploited, and accounts are easily hijacked, Stellsky aims to flip the script. We believe users deserve full control over their identity, creative freedom, and the opportunity to earn from the value they bring online.
 
-## ✨ Özellikler
+To achieve this, we combine:
 
-- 🔐 **Stellar Cüzdan Entegrasyonu** - Kullanıcılar Stellar cüzdan adresleri ile güvenli giriş
-- 📝 **Post Paylaşım Sistemi** - Metin ve resim paylaşımı (280 karakter limit)
-- ❤️ **Beğeni (Like) Sistemi** - Postları beğenme ve beğeni geri çekme
-- 👤 **Kullanıcı Profilleri** - Kişisel profil sayfaları
-- 🔄 **Gerçek Zamanlı Güncellemeler** - Anında post görüntüleme
-- 🤖 **AI Entegrasyonu** - Gelişmiş arama ve öneri sistemi
-- 📱 **Responsive Tasarım** - Mobil ve masaüstü uyumlu modern UI
+🌐 Web3 Authentication: Wallet-based login ensures users own their digital identity.
 
-## 🛠️ Teknoloji Stack
+🤖 AI-Generated Content: Smart suggestions enhance user creativity without compromising their voice.
 
-### Frontend
+🖼️ NFT Integration: Every post becomes a unique, ownable, and tradable asset.
 
-- **Next.js 15.3.4** - React framework
-- **React 19** - UI kütüphanesi
-- **Tailwind CSS 4** - Stil framework
-- **Stellar SDK** - Blockchain entegrasyonu
-- **Lucide React** - İkon kütüphanesi
+Whether you’re a storyteller, content creator, or crypto enthusiast, Stellsky empowers you to be the owner of your content and data — not just a user of the platform.
 
-### Backend
+🔑 Key Features
+🔐 Web3 Smart Login (via Stellar 🌟)
+Connect with your crypto wallet — no email, no passwords.
 
-- **Node.js** - Runtime environment
-- **Express.js 5** - Web framework
-- **MongoDB** - Veritabanı
-- **JWT** - Kimlik doğrulama
-- **Stellar SDK** - Blockchain operations
-- **Swagger** - API dokümantasyonu
+Built on the Stellar blockchain, login is decentralized and secure.
 
-### AI Komponenti
+Prevents traditional account hijacking and phishing attacks.
 
-- **FastAPI** - Python web framework
-- **PyMongo** - MongoDB driver
-- **Elasticsearch** - Arama motoru
-- **NLTK** - Doğal dil işleme
+Creates a verifiable, immutable digital identity.
 
-## 📦 Kurulum
+🤖 AI-Powered Content Generator
+Integrated with Google Gemini via LangChain framework.
 
-### Gereksinimler
+Reads user data like interests, language, writing style, posting habits.
 
-- Node.js (v18 veya üzeri)
-- MongoDB (lokal veya Atlas)
-- Python 3.8+ (AI modülü için)
-- npm veya yarn
+AI crafts smart suggestions for storytelling and posts.
 
-### 1. Proje Klonlama
+Promotes authentic expression while boosting creativity.
 
-```bash
-git clone <repository-url>
-cd Stellsky
-```
+Models are lightweight, customizable, and scale well on demand.
 
-### 2. Backend Kurulumu
+🖼️ NFT-Based Monetization System
+Every post can be minted as an NFT on Stellar.
 
-```bash
-cd server
-npm install
+Post popularity impacts NFT value:
 
-# Environment dosyası oluşturun
-cp env.example .env
-# .env dosyasını düzenleyin:
-# PORT=5000
-# MONGODB_URI=mongodb://localhost:27017/stellsky
-# JWT_SECRET=your-secret-key
-# FRONTEND_URL=http://localhost:3000
+👍 Likes increase rarity
 
-# MongoDB'yi başlatın
-mongod
+💬 Comments add interaction value
 
-# Server'ı başlatın
-npm run dev
-```
+🔁 Shares boost visibility and influence
 
-### 3. Frontend Kurulumu
+NFT assets are:
 
-```bash
-cd frontend
-npm install
+User-owned
 
-# Environment dosyası oluşturun
-echo "NEXT_PUBLIC_API_URL=http://localhost:5000/api" > .env.local
+Transferable
 
-# Frontend'i başlatın
-npm run dev
-```
+Valuable
 
-### 4. AI Modülü Kurulumu (Opsiyonel)
+Enables true creator economy: your creativity earns real rewards.
 
-```bash
-cd AI
-pip install -r requirements.txt
+🧱 Tech Stack Overview
+Layer	Tools & Frameworks Used
+🎨 Frontend	React.js, TailwindCSS, Web3.js, WalletConnect
+⚙️ Backend	FastAPI (Python), Express.js (Node.js), Uvicorn
+🤖 AI Integration	LangChain, Google Generative AI (Gemini), Prompt Engineering
+📦 Database	MongoDB Atlas (NoSQL, Cloud-Based)
+🔐 Blockchain	Stellar SDK, Wallet Metadata, NFT Minting
+☁️ Deployment	Render.com / Heroku (free-tier friendly), Nginx (optional), Docker (optional)
 
-# AI servisini başlatın
-python app.py
-```
+🛠️ How We Built It
+We started by designing a clean React frontend with wallet login and a personalized content dashboard.
 
-## 🚀 Kullanım
+The FastAPI backend handles all business logic, AI prompt generation, and database access.
 
-### Giriş Yapma
+The AI module uses LangChain to structure prompts, which are sent to Google Gemini LLM via API. Prompt responses are tailored to each user’s profile.
 
-1. http://localhost:3000 adresine gidin
-2. Sağ üst köşedeki "Sign In" butonuna tıklayın
-3. Geçerli Stellar cüzdan adresinizi girin (G ile başlayan 56 karakter)
-4. Sistem otomatik olarak giriş yapacak
+A dynamic NFT minting system was created using Stellar blockchain, where each user post is minted and stored with metadata that tracks engagement.
 
-### Post Paylaşma
+We avoided complex blockchain development by focusing on smart integrations — giving us Web3 benefits without heavy infrastructure.
 
-1. Giriş yaptıktan sonra "What's on your mind?" alanını kullanın
-2. Metninizi yazın (maks. 280 karakter)
-3. İsteğe bağlı olarak resim URL'si ekleyin
-4. "Post" butonuna tıklayın
+For quick testing, we mocked the MongoDB dataset and trained the AI logic with sample prompts.
 
-### Sosyal Etkileşim
+Everything was deployed using Render.com with free-tier hosting and .env configuration for secret handling.
 
-- Postları beğenmek için ❤️ ikonuna tıklayın
-- Kullanıcı profillerini görüntülemek için isimlere tıklayın
-- Tüm postlar ana feed'de gerçek zamanlı görüntülenir
+🌍 Who Is It For?
+📸 Content Creators who want to generate unique posts with AI.
 
-## 🔧 API Endpoints
+🎨 Artists & Writers looking to protect and monetize digital content.
 
-### Authentication
+💬 Communities who want decentralized platforms with financial incentives.
 
-- `POST /api/auth/login` - Cüzdan ile giriş
-- `GET /api/auth/isAuthenticated` - Kimlik doğrulama kontrolü
+🔒 Users who care about privacy, security, and data ownership.
 
-### Posts
+Our platform targets the next billion users who are entering Web3 and expect smarter, safer, and fairer platforms. Whether you’re Gen Z, a developer, or a crypto-curious user, Stellsky has a place for you.
 
-- `GET /api/posts` - Tüm postları getir
-- `POST /api/posts` - Yeni post oluştur
-- `GET /api/posts/:id` - Belirli post getir
-- `DELETE /api/posts/:id` - Post sil
-- `PUT /api/posts/:id/like` - Post beğen
-- `PUT /api/posts/:id/unlike` - Beğeniyi geri çek
-- `GET /api/posts/user/:address` - Kullanıcı postları
+📈 Impact & Potential
+Social platforms have become data mines — we give the power back to users.
 
-### Detaylı API dokümantasyonu için: http://localhost:5000/api-docs
+With the fusion of AI + Web3 + NFT:
 
-## 📁 Proje Yapısı
+You create faster,
 
-```
-Stellsky/
-├── frontend/              # Next.js frontend
-│   ├── src/
-│   │   ├── app/          # Next.js app router
-│   │   ├── components/   # React bileşenleri
-│   │   ├── contexts/     # React context'leri
-│   │   ├── hooks/        # Custom hooks
-│   │   └── services/     # API servisleri
-│   └── package.json
-├── server/               # Node.js backend
-│   ├── controllers/      # API kontrolcüleri
-│   ├── middleware/       # Express middleware
-│   ├── routes/          # API rotaları
-│   ├── utils/           # Yardımcı fonksiyonlar
-│   └── server.js        # Ana server dosyası
-├── AI/                  # Python AI modülü
-│   ├── api.py           # FastAPI endpoints
-│   ├── model.py         # AI modelleri
-│   └── requirements.txt # Python bağımlılıkları
-└── README.md
-```
+You own your work,
 
-## 🎨 Özellik Detayları
+You earn from your influence.
 
-### Stellar Entegrasyonu
+Stellsky is not just a social media platform — it's a movement toward a decentralized creator economy. As we grow, we aim to onboard thousands of users, artists, and influencers who believe in digital sovereignty and AI-aided expression.
 
-- Stellar cüzdan adreslerini doğrulama
-- Blockchain tabanlı kimlik doğrulama
-- Güvenli token yönetimi
+🤝 Contributors & License
+This project was built during a Hackathon by a passionate team of engineers and designers who believe in tech for good.
+Feel free to contribute, fork, and build on top of it!
 
-### Güvenlik
-
-- JWT token tabanlı kimlik doğrulama
-- CORS koruması
-- Input validasyonu
-- Güvenli API endpoints
-
-### Performance
-
-- Responsive tasarım
-- Lazy loading
-- Optimize edilmiş bundle size
-- Hızlı API yanıtları
-
-## 🤝 Katkıda Bulunma
-
-1. Proje fork'layın
-2. Feature branch oluşturun (`git checkout -b feature/AmazingFeature`)
-3. Değişikliklerinizi commit'leyin (`git commit -m 'Add some AmazingFeature'`)
-4. Branch'inizi push'layın (`git push origin feature/AmazingFeature`)
-5. Pull Request oluşturun
-
-## 📝 Lisans
-
-Bu proje MIT lisansı altında lisanslanmıştır.
-
-## 🐛 Sorun Giderme
-
-### Yaygın Sorunlar
-
-**1. MongoDB Bağlantı Hatası**
-
-```bash
-# MongoDB'nin çalıştığından emin olun
-mongod --version
-```
-
-**2. CORS Hatası**
-
-- `.env` dosyasında `FRONTEND_URL` ayarını kontrol edin
-- Backend ve frontend'in doğru portlarda çalıştığından emin olun
-
-**3. Token Hatası**
-
-- Browser localStorage'ı temizleyin
-- Tekrar giriş yapın
-
-**4. Stellar Cüzdan Hatası**
-
-- Cüzdan adresinin geçerli Stellar formatında olduğundan emin olun
-- Adres G ile başlamalı ve 56 karakter olmalı
-
-### Destek
-
-Herhangi bir sorun yaşarsanız:
-
-1. GitHub Issues'da sorun bildirin
-2. Logs'ları kontrol edin (browser console + server logs)
-3. Setup adımlarını tekrar gözden geçirin
-
-## 🌟 Gelecek Özellikler
-
-- [ ] Takip sistemi (Follow/Unfollow)
-- [ ] Direkt mesajlaşma
-- [ ] Grup oluşturma
-- [ ] NFT entegrasyonu
-- [ ] Mobil uygulama
-- [ ] Push notifications
-- [ ] Trend analizi
-- [ ] Advanced search
-
----
-
-**Stellsky** ile blockchain tabanlı sosyal medya deneyimini yaşayın! 🚀
+Licensed under MIT. Open source is the future 🌐

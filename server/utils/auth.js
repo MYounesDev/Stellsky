@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { getCollection } from "./db.js";
-import { StrKey } from "@stellar/stellar-sdk";
+import { StrKey } from "./stellar-mock.js"; // Use our mock implementation
 
 // Secret key for JWT
 const JWT_SECRET = process.env.JWT_SECRET || "stellar-secret-key";
