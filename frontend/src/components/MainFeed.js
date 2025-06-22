@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useStellar } from "../contexts/StellarContext";
 import PostModal from "./PostModal";
+import AIMenu from "./AIMenu";
 
 // Instagram benzeri Stories
 const stories = [
@@ -309,6 +310,9 @@ export default function MainFeed() {
           ))}
         </div>
       </div>
+
+      {/* AI Menu */}
+      <AIMenu />
 
       {/* Create Post */}
       <CreatePost />
