@@ -7,7 +7,9 @@ import os
 from dotenv import load_dotenv
 from pydantic import BaseModel
 import httpx 
-from model import get_model
+from model import get_response
+from bson import ObjectId
+from datetime import datetime
 
 # Load env variables
 load_dotenv()
@@ -19,7 +21,7 @@ logger = logging.getLogger(__name__)
 # MongoDB setup
 MONGO_URI = os.getenv("MONGO_URI")
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)
-db = client["hach-pera-db"]  
+db = client["Stellsky"]  
 
 # FastAPI setup
 app = FastAPI(
@@ -52,6 +54,28 @@ async def test_db_connection():
         logger.error(f"DB error: {e}")
         raise HTTPException(status_code=500, detail="DB connection failed")
 
+def fix_mongo_types(results):
+    fixed = []
+    for doc in results:
+        if not isinstance(doc, dict):
+            fixed.append(doc) 
+            continue
+        
+        fixed_doc = {}
+        for k, v in doc.items():
+            if isinstance(v, ObjectId):
+                fixed_doc[k] = str(v)
+            elif isinstance(v, datetime):
+                fixed_doc[k] = v.isoformat()
+            else:
+                fixed_doc[k] = v
+        fixed.append(fixed_doc)
+    
+    string_response = ""
+    for i in fixed:
+        string_response += i
+    return string_response
+
 # Request model
 class PromptRequest(BaseModel):
     prompt: str
@@ -63,12 +87,15 @@ async def prompt_analyze(request: PromptRequest):
     Receives a prompt from the frontend (in JSON body),
     sends it to the external LLM API, and returns the LLM's response.
     """
-    model = get_model()
-    response = model.invoke(request.prompt)
+    response = await get_response(request.prompt)
+    
+    fixed_results = fix_mongo_types(response)
+
 
     return {
         "status": "success",
-        "llm_response": response.content
+        "llm_response": fixed_results
+
     }
 
 # Request model
