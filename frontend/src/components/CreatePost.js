@@ -36,7 +36,7 @@ export default function CreatePost() {
       <div className="bg-secondary rounded-xl p-6 border border-border animate-fadeIn">
         <div className="text-center">
           <p className="text-muted mb-4">
-            Post paylaşmak için Stellar cüzdanınızı bağlamanız gerekiyor
+            Post paylaşmak için cüzdanınızı bağlamanız gerekiyor
           </p>
           <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full mx-auto opacity-50"></div>
         </div>
